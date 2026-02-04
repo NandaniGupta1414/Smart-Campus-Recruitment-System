@@ -7,7 +7,7 @@ import Auth from "./pages/Auth";
 
 
 import StudentDashboard from "./pages/StudentDashboard";
-import StudentProfile from "./pages/studentProfile";   // small filename ok
+import StudentProfile from "./pages/StudentProfile";   // small filename ok
 import AdminDashboard from "./pages/AdminDashboard";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import ViewApplicants from "./pages/ViewApplicants";

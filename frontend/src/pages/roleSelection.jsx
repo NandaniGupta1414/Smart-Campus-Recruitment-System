@@ -1,26 +1,4 @@
-// import { useNavigate } from "react-router-dom";
 
-// function RoleSelection() {
-//   const navigate = useNavigate();
-
-//   const handleRoleSelect = (role) => {
-//     // Save selected role
-//     localStorage.setItem("selectedRole", role);
-//     // Redirect to login page
-//     navigate("/auth");
-//   };
-
-//   return (
-//     <div style={{ textAlign: "center", marginTop: "50px" }}>
-//       <h2>Login As:</h2>
-//       <button onClick={() => handleRoleSelect("student")}>Student</button>
-//       <button onClick={() => handleRoleSelect("company")}>Company</button>
-//       <button onClick={() => handleRoleSelect("admin")}>Admin</button>
-//     </div>
-//   );
-// }
-
-// export default RoleSelection;
 import { useNavigate } from "react-router-dom";
 //import BackButton from "../components/BackButton";
 
