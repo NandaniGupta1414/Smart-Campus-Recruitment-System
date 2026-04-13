@@ -36,7 +36,7 @@ function CompanyDashboard() {
           headers: { Authorization: `Bearer ${token}` }
         });
         
-        (await import("../utils/notify")).notify("Job and all related data removed! 🗑️", { type: 'success' });
+        (await import("../utils/notify")).notify("Job and all related data removed! ", { type: 'success' });
         fetchMyJobs(); // List refresh karo
       } catch (err) {
         (await import("../utils/notify")).notify(err.response?.data?.message || "Error deleting job", { type: 'error' });

@@ -60,7 +60,7 @@ function AdminDashboard() {
         await axios.delete(`http://localhost:5000/api/admin/${deleteUrl}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        (await import("../utils/notify")).notify("Action Successful! ✨", { type: 'success' });
+        (await import("../utils/notify")).notify("Action Successful! ", { type: 'success' });
         fetchStats();
         fetchData(view);
       }
@@ -68,6 +68,30 @@ function AdminDashboard() {
       (await import("../utils/notify")).notify("System Error: Check backend routes.", { type: 'error' });
     }
   };
+ const downloadReport = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:5000/api/admin/report/download",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: "blob"
+      }
+    );
+
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.setAttribute("download", "campus-recruitment-report.pdf");
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+  } catch (error) {
+    console.error("Download error:", error);
+  }
+};
 
   const SidebarContent = () => (
     <>
@@ -85,7 +109,7 @@ function AdminDashboard() {
           </button>
         ))}
       </nav>
-      <button onClick={() => {localStorage.clear(); navigate("/");}} className="bg-red-600 text-white p-5 rounded-2xl font-black text-xs uppercase shadow-lg">Logout 🚪</button>
+      <button onClick={() => {localStorage.clear(); navigate("/");}} className="bg-red-600 text-white p-5 rounded-2xl font-black text-xs uppercase shadow-lg">Logout </button>
     </>
   );
 
@@ -117,6 +141,12 @@ function AdminDashboard() {
                 <p className="text-xs font-black text-slate-400 uppercase tracking-[0.4em] mb-2 font-bold italic">Cloud Control Center</p>
                 <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter uppercase leading-none">System</h1>
               </div>
+              <button
+  onClick={downloadReport}
+  className="bg-green-600 text-white px-5 py-3 rounded-xl font-black text-xs uppercase shadow-xl mr-3"
+>
+  Download Report
+</button>
               <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden bg-slate-900 text-white p-4 rounded-xl font-black text-xs uppercase shadow-xl">Menu ☰</button>
           </header>
 

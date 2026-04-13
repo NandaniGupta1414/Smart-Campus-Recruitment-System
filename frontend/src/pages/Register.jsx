@@ -1,6 +1,6 @@
 
 
-// from blackbox ai with loading state on button
+
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -30,45 +30,104 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false); 
   const [role, setRole] = useState("student");
   const [adminSecret, setAdminSecret] = useState("");
-  const [loading, setLoading] = useState(false); // 🔥 NEW: Loading state
+  const [loading, setLoading] = useState(false);
+  const [otp, setOtp] = useState("");
+const [otpSent, setOtpSent] = useState(false);
+   // 🔥 NEW: Loading state
   const navigate = useNavigate();
 
+  // const handleRegister = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true); // 🔥 NEW: Start loading
+  //   try {
+  //     const res = await axios.post("http://localhost:5000/api/auth/register", {
+  //       name,
+  //       email,
+  //       password,
+  //       role,
+  //       adminSecret: role === "admin" ? adminSecret : undefined, // 🔥 FIXED: No trailing comma
+  //     });
+
+  //     const { token, user } = res.data; // 🔥 NEW: Extract token and user
+
+  //     // 🔥 NEW: Auto-login - Store in localStorage
+  //     localStorage.setItem("token", token);
+  //     localStorage.setItem("role", user.role);
+  //     localStorage.setItem("user", JSON.stringify(user));
+
+  //     (await import("../utils/notify")).notify("Registration successful! Completing your profile...", { type: 'success' });
+      
+  //     // 🔥 NEW: Direct navigation
+  //     if (user.role === "student") {
+  //       navigate("/student/profile");
+  //     } else if (user.role === "admin") {
+  //       navigate("/admin");
+  //     } else if (user.role === "company") {
+  //       navigate("/company");
+  //     }
+  //   } catch (error) {
+  //     (await import("../utils/notify")).notify(error.response?.data?.message || "Registration failed!", { type: 'error' });
+  //   } finally {
+  //     setLoading(false); // 🔥 NEW: Stop loading
+  //   }
+  // };
+
   const handleRegister = async (e) => {
-    e.preventDefault();
-    setLoading(true); // 🔥 NEW: Start loading
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+
+    // STEP 1 → SEND OTP
+    if (!otpSent) {
+
+      await axios.post("http://localhost:5000/api/auth/send-register-otp", {
         name,
         email,
         password,
         role,
-        adminSecret: role === "admin" ? adminSecret : undefined, // 🔥 FIXED: No trailing comma
+        adminSecret: role === "admin" ? adminSecret : undefined
       });
 
-      const { token, user } = res.data; // 🔥 NEW: Extract token and user
+      setOtpSent(true);
 
-      // 🔥 NEW: Auto-login - Store in localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", user.role);
-      localStorage.setItem("user", JSON.stringify(user));
+      alert("OTP sent to your email");
 
-      (await import("../utils/notify")).notify("Registration successful! Completing your profile...", { type: 'success' });
-      
-      // 🔥 NEW: Direct navigation
-      if (user.role === "student") {
-        navigate("/student/profile");
-      } else if (user.role === "admin") {
-        navigate("/admin");
-      } else if (user.role === "company") {
-        navigate("/company");
-      }
-    } catch (error) {
-      (await import("../utils/notify")).notify(error.response?.data?.message || "Registration failed!", { type: 'error' });
-    } finally {
-      setLoading(false); // 🔥 NEW: Stop loading
+      setLoading(false);
+      return;
     }
-  };
 
+    // STEP 2 → VERIFY OTP
+    const res = await axios.post(
+      "http://localhost:5000/api/auth/verify-register-otp",
+      { email, otp }
+    );
+
+    const { token, user } = res.data;
+
+    localStorage.setItem("token", token);
+    //localStorage.setItem("role", user.role);
+    // ✅ FIX (matching key)
+localStorage.setItem("selectedRole", user.role);
+    localStorage.setItem("user", JSON.stringify(user));
+
+    alert("Registration successful");
+
+    if (user.role === "student") navigate("/student/profile");
+    else if (user.role === "admin") navigate("/admin");
+    else navigate("/company");
+
+  } catch (error) {
+
+    alert(error.response?.data?.message || "Something went wrong");
+
+  } finally {
+
+    setLoading(false);
+
+  }
+};
   return (
     <div className="min-h-screen bg-[#F1F5F9] flex items-center justify-center p-6 font-sans">
       <div className="bg-white w-full max-w-lg rounded-[3rem] shadow-2xl p-12 border border-slate-100">
@@ -158,7 +217,7 @@ function Register() {
             </select>
           </div>
 
-          {role === "admin" && (
+          {/* {role === "admin" && (
             <div className="animate-in slide-in-from-top-4 duration-300">
               <label className="block text-[10px] font-black text-blue-600 uppercase ml-2 mb-1 tracking-tighter">Admin Secret Key Required *</label>
               <input
@@ -172,14 +231,50 @@ function Register() {
                 required
               />
             </div>
-          )}
+          )} */}
+          {role === "admin" && (
+  <div className="animate-in slide-in-from-top-4 duration-300">
+    <label className="block text-[10px] font-black text-blue-600 uppercase ml-2 mb-1 tracking-tighter">
+      Admin Secret Key Required *
+    </label>
+    <input
+      id="register-admin-secret"
+      name="adminSecret"
+      type="password"
+      placeholder="Enter Secret Code"
+      className="w-full p-4 bg-blue-50 border-2 border-blue-200 rounded-2xl focus:border-blue-600 outline-none font-black text-blue-700"
+      value={adminSecret}
+      onChange={(e) => setAdminSecret(e.target.value)}
+      required
+    />
+  </div>
+)}
+
+{/* OTP FIELD */}
+{otpSent && (
+  <div>
+    <label className="block text-[10px] font-black text-slate-400 uppercase ml-2 mb-1">
+      Enter OTP
+    </label>
+
+    <input
+      type="text"
+      placeholder="Enter OTP"
+      className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-600 outline-none font-bold text-slate-700"
+      value={otp}
+      onChange={(e) => setOtp(e.target.value)}
+      required
+    />
+  </div>
+)}
 
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:bg-blue-600 transition-all mt-4"
           >
-            {loading ? "REGISTERING..." : "Register Now"}
+            {/* {loading ? "REGISTERING..." : "Register Now"} */}
+            {loading ? "PROCESSING..." : otpSent ? "Verify OTP" : "Send OTP"}
           </button>
         </form>
 

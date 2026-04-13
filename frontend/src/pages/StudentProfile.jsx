@@ -122,7 +122,7 @@ function StudentProfile() {
             <h3 className="text-xl font-black text-blue-800 mb-4 uppercase tracking-widest flex items-center gap-3">📞 Personal Info</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div><label className={labelStyle}>Full Name</label><input className={inputStyle} value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required /></div>
-              <div><label className={labelStyle}>Phone Number</label><input className={inputStyle} value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} required /></div>
+              <div><label className={labelStyle}>Phone Number</label><input type = "number" className={inputStyle} value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} required /></div>
             </div>
           </div>
 
@@ -145,22 +145,22 @@ function StudentProfile() {
                 />
               </div>
 
-              <div><label className={labelStyle}>Graduation (%)</label><input className={inputStyle} value={formData.gradMarks} onChange={e => setFormData({...formData, gradMarks: e.target.value})} required /></div>
+              <div><label className={labelStyle}>Graduation (%)</label><input type = "number" className={inputStyle} value={formData.gradMarks} onChange={e => setFormData({...formData, gradMarks: e.target.value})} required /></div>
               
-              <div className="p-4 bg-white rounded-2xl border border-slate-200"><label className={labelStyle}>10th Board</label><input className={inputStyle} value={formData.xthBoard} onChange={e => setFormData({...formData, xthBoard: e.target.value})} required /><label className={labelStyle}>10th Marks (%)</label><input className={inputStyle} value={formData.xthMarks} onChange={e => setFormData({...formData, xthMarks: e.target.value})} required /></div>
-              <div className="p-4 bg-white rounded-2xl border border-slate-200"><label className={labelStyle}>12th Board</label><input className={inputStyle} value={formData.xiithBoard} onChange={e => setFormData({...formData, xiithBoard: e.target.value})} required /><label className={labelStyle}>12th Marks (%)</label><input className={inputStyle} value={formData.xiithMarks} onChange={e => setFormData({...formData, xiithMarks: e.target.value})} required /></div>
+              <div className="p-4 bg-white rounded-2xl border border-slate-200"><label className={labelStyle}>10th Board</label><input className={inputStyle} value={formData.xthBoard} onChange={e => setFormData({...formData, xthBoard: e.target.value})} required /><label className={labelStyle}>10th Marks (%)</label><input type = "number" className={inputStyle} value={formData.xthMarks} onChange={e => setFormData({...formData, xthMarks: e.target.value})} required /></div>
+              <div className="p-4 bg-white rounded-2xl border border-slate-200"><label className={labelStyle}>12th Board</label><input className={inputStyle} value={formData.xiithBoard} onChange={e => setFormData({...formData, xiithBoard: e.target.value})} required /><label className={labelStyle}>12th Marks (%)</label><input type = "number" className={inputStyle} value={formData.xiithMarks} onChange={e => setFormData({...formData, xiithMarks: e.target.value})} required /></div>
             </div>
           </div>
 
           {/* Section 3: Project & Skills */}
           <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
-            <h3 className="text-xl font-black text-blue-800 mb-4 uppercase tracking-widest flex items-center gap-3">💻 Project & Skills</h3>
+            <h3 className="text-xl font-black text-blue-800 mb-4 uppercase tracking-widest flex items-center gap-3"> Project & Skills</h3>
             <div className="space-y-6">
               <div><label className={labelStyle}>Technical Skills (Comma separated)</label><input className={inputStyle} value={formData.skills} onChange={e => setFormData({...formData, skills: e.target.value})} placeholder="e.g. React, Node.js" required /></div>
               <div><label className={labelStyle}> Project Description</label><textarea className={inputStyle} rows="4" value={formData.projectDescription} onChange={e => setFormData({...formData, projectDescription: e.target.value})} required /></div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div><label className={labelStyle}>GitHub Link</label><input className={inputStyle} value={formData.githubLink} onChange={e => setFormData({...formData, githubLink: e.target.value})} required /></div>
-                <div><label className={labelStyle}>LinkedIn Link</label><input className={inputStyle} value={formData.linkedinLink} onChange={e => setFormData({...formData, linkedinLink: e.target.value})} required /></div>
+                <div><label className={labelStyle}>GitHub Link</label><input type = "url" className={inputStyle} value={formData.githubLink} onChange={e => setFormData({...formData, githubLink: e.target.value})} required /></div>
+                <div><label className={labelStyle}>LinkedIn Link</label><input type = "url" className={inputStyle} value={formData.linkedinLink} onChange={e => setFormData({...formData, linkedinLink: e.target.value})} required /></div>
               </div>
             </div>
           </div>
@@ -179,7 +179,7 @@ function StudentProfile() {
           </div>
 
           <button disabled={loading} className="w-full bg-blue-700 text-white py-6 rounded-[2rem] font-black text-2xl shadow-xl hover:bg-slate-900 transition-all uppercase">
-            {loading ? "SAVING DATA..." : "UPDATE MY PROFILE ✅"}
+            {loading ? "SAVING DATA..." : "UPDATE MY PROFILE "}
           </button>
         </form>
       </div>

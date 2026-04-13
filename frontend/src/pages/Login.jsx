@@ -49,11 +49,11 @@ function Login() {
       localStorage.setItem("role", user.role);
       localStorage.setItem("user", JSON.stringify(user));
 
-      (await import("../utils/notify")).notify("Login successful! ✨", { type: 'success' });
+      (await import("../utils/notify")).notify("Login successful! ", { type: 'success' });
 
       if (user.role === "student") {
         // Determine profile completion using backend fields: university, specialization, phone
-        const hasDetails = user.university && user.university.trim() !== "" && user.specialization && user.specialization.trim() !== "" && user.phone && user.phone.trim() !== "";
+        const hasDetails = user.university && user.university.trim() !== "" && user.specialization && user.specialization.trim() !== "" && user.phone && user.phone;
 
         if (hasDetails) {
           console.log("Navigating to dashboard: /student");
@@ -163,6 +163,12 @@ function Login() {
             {loading ? "VERIFYING..." : "LOGIN"}
           </button>
         </form>
+        <p 
+  onClick={() => navigate("/forget-password")}
+  className="text-right text-sm text-blue-600 cursor-pointer mt-2"
+>
+  Forgot Password ?
+</p>
 
         <p className="text-center mt-8 text-sm font-bold text-slate-400">
           New student? <span onClick={() => navigate("/register")} className="text-blue-600 cursor-pointer hover:underline font-black">Register Here</span>

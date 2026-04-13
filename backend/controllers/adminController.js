@@ -3,6 +3,7 @@ const path = require("path");
 const User = require("../models/user");
 const Job = require("../models/job");
 const Application = require("../models/Application");
+const PDFDocument = require("pdfkit");
 
 // 1. DASHBOARD STATS (Total counts for Admin Home)
 exports.getStats = async (req, res) => {
@@ -11,9 +12,7 @@ exports.getStats = async (req, res) => {
     const companyCount = await User.countDocuments({ role: "company" });
     const jobCount = await Job.countDocuments();
 
-    // 🔥 SMART COUNT LOGIC:
-    // Hum sirf wahi applications count karenge jinka 'job' null nahi hai
-    // Matlab jinki main Job delete nahi hui hai
+    
     const allApps = await Application.find().populate("job");
     const validApps = allApps.filter(app => app.job !== null);
     const applicationCount = validApps.length;
@@ -142,5 +141,56 @@ exports.deleteApplication = async (req, res) => {
     res.json({ message: "Application entry removed!" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting application" });
+  }
+};
+// --- DOWNLOAD FULL RECRUITMENT REPORT ---
+exports.downloadReport = async (req, res) => {
+  try {
+
+    const students = await User.countDocuments({ role: "student" });
+    const companies = await User.countDocuments({ role: "company" });
+    const jobs = await Job.countDocuments();
+    const applications = await Application.countDocuments();
+
+    const appDetails = await Application.find()
+      .populate("student", "name email")
+      .populate("job", "title companyName");
+
+    const doc = new PDFDocument();
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=campus-report.pdf");
+
+    doc.pipe(res);
+
+    doc.fontSize(20).text("SMART CAMPUS RECRUITMENT REPORT", { align: "center" });
+
+    doc.moveDown();
+    doc.text(`Total Students: ${students}`);
+    doc.text(`Total Companies: ${companies}`);
+    doc.text(`Total Jobs: ${jobs}`);
+    doc.text(`Total Applications: ${applications}`);
+
+    doc.moveDown();
+    doc.fontSize(16).text("Application Details");
+
+    doc.moveDown();
+
+    appDetails.forEach((app, index) => {
+      const studentName = app.student?.name || "N/A";
+      const email = app.student?.email || "N/A";
+      const jobTitle = app.job?.title || "N/A";
+      const company = app.job?.companyName || "N/A";
+
+      doc.fontSize(12).text(
+        `${index + 1}. ${studentName} | ${email} | ${jobTitle} | ${company}`
+      );
+    });
+
+    doc.end();
+
+  } catch (error) {
+    console.error("PDF Error:", error);
+    res.status(500).json({ message: "Error generating report" });
   }
 };

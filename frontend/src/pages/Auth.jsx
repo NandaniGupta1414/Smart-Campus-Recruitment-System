@@ -1,151 +1,4 @@
-// import { useState } from "react";
-// import axios from "axios";
-// import { useNavigate } from "react-router-dom";
 
-// function Auth() {
-//   const [mode, setMode] = useState("login"); // login, register, forgot
-//   const [name, setName] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [error, setError] = useState("");
-//   const [message, setMessage] = useState("");
-
-//   const navigate = useNavigate();
-//   const role = localStorage.getItem("selectedRole") || "student";
-
-//   // Mode change karte waqt errors ko clear karne ke liye function
-//   const handleModeChange = (newMode) => {
-//   setMode(newMode);
-//   setError("");     // Error message clear karo
-//   setMessage("");   // Success message clear karo
-//   setName("");      // Name field khali karo
-//   setEmail("");     // Email field khali karo
-//   setPassword("");  // Password field khali karo
-// };
-
-//   const handleAuth = async (e) => {
-//     e.preventDefault();
-//     setError("");
-//     setMessage("");
-
-//     let endpoint = "/api/auth/login";
-//     let payload = { email, password };
-
-//     if (mode === "register") {
-//       endpoint = "/api/auth/register";
-//       payload = { name, email, password, role };
-//     } else if (mode === "forgot") {
-//       endpoint = "/api/auth/reset-password";
-//       payload = { email, newPassword: password };
-//     }
-
-//     try {
-//       const res = await axios.post(`http://localhost:5000${endpoint}`, payload);
-
-//       if (mode === "login") {
-//         // 1. Pehle role ko kahin save kar lo taaki wo delete na ho
-//   const currentRole = localStorage.getItem("selectedRole");
-
-//   // 2. Ab pura storage saaf karo (Purane user ka kachra khatam)
-//   localStorage.clear(); 
-
-//   // 3. Token save karo aur Role ko wapas dalo
-//   localStorage.setItem("token", res.data.token);
-//   localStorage.setItem("selectedRole", currentRole);
-        
-//         const profile = await axios.get("http://localhost:5000/api/auth/me", {
-//           headers: { Authorization: `Bearer ${res.data.token}` },
-//         });
-
-//         localStorage.setItem("user", JSON.stringify(profile.data));
-        
-//         const userRole = profile.data.role;
-//         if (userRole === "student") {
-//           profile.data.profileCompleted ? navigate("/student") : navigate("/student/profile");
-//         } else if (userRole === "admin") {
-//           navigate("/admin");
-//         } else {
-//           navigate("/company");
-//         }
-//       } else if (mode === "register") {
-//         setMessage("Registration successful! Please login.");
-//         setMode("login");
-//       } else {
-//         setMessage("Password updated successfully! Please login.");
-//         setMode("login");
-//       }
-//     } catch (err) {
-//       setError(err.response?.data?.message || "Operation failed. Check your details.");
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-//       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-//         <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-6">
-//           {mode === "login" ? "Welcome Back" : mode === "register" ? "Join Us" : "Reset Password"}
-//         </h2>
-
-//         <p className="text-center text-gray-500 mb-6 uppercase tracking-widest text-xs font-bold">
-//           {role} Portal
-//         </p>
-
-//         {/* Error and Success Messages */}
-//         {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium border-l-4 border-red-500">{error}</div>}
-//         {message && <div className="bg-green-50 text-green-600 p-3 rounded-lg mb-4 text-sm font-medium border-l-4 border-green-500">{message}</div>}
-
-//         <form onSubmit={handleAuth} className="space-y-4">
-//           {mode === "register" && (
-//             <input 
-//               className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition-all" 
-//               type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required 
-//             />
-//           )}
-          
-//           <input 
-//             className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition-all" 
-//             type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} required 
-//           />
-          
-//           <input 
-//             className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition-all" 
-//             type="password" placeholder={mode === "forgot" ? "New Password" : "Password"} value={password} onChange={(e) => setPassword(e.target.value)} required 
-//           />
-
-//           {mode === "login" && (
-//             <p 
-//               className="text-right text-sm text-blue-600 cursor-pointer hover:underline font-medium" 
-//               onClick={() => handleModeChange("forgot")}
-//             >
-//               Forgot Password?
-//             </p>
-//           )}
-
-//           <button className="w-full bg-blue-700 text-white p-3 rounded-xl font-bold hover:bg-blue-800 transition shadow-lg transform active:scale-95">
-//             {mode === "login" ? "Login" : mode === "register" ? "Register" : "Update Password"}
-//           </button>
-//         </form>
-
-//         <p className="text-center mt-6 text-gray-500 text-sm">
-//           {mode === "login" ? (
-//             <>
-//               New here?{" "}
-//               <span className="text-blue-700 font-bold cursor-pointer hover:underline" onClick={() => handleModeChange("register")}>
-//                 Register
-//               </span>
-//             </>
-//           ) : (
-//             <span className="text-blue-700 font-bold cursor-pointer hover:underline" onClick={() => handleModeChange("login")}>
-//               Back to Login
-//             </span>
-//           )}
-//         </p>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Auth;
 
 import { useState } from "react";
 import axios from "axios";
@@ -182,95 +35,177 @@ function Auth() {
     setShowAdminSecret(false);
   };
 
-  const handleAuth = async (e) => {
-    e.preventDefault();
-    setError("");
-    setMessage("");
+  // const handleAuth = async (e) => {
+  //   e.preventDefault();
+  //   setError("");
+  //   setMessage("");
 
-    let endpoint = "/api/auth/login";
-    let payload = { email, password };
+  //   let endpoint = "/api/auth/login";
+  //   let payload = { email, password };
 
-    if (mode === "register") {
-      endpoint = "/api/auth/register";
-      payload = {
-        name,
-        email,
-        password,
-        role: selectedRole,
-        adminSecret: selectedRole === "admin" ? adminSecret : undefined,
-      };
-    } else if (mode === "forgot") {
-      endpoint = "/api/auth/reset-password";
-      payload = { email, newPassword: password };
-    }
+  //   if (mode === "register") {
+  //     // endpoint = "/api/auth/register";
+  //     navigate("/register");
+  // return;
 
+  //     // payload = {
+  //     //   name,
+  //     //   email,
+  //     //   password,
+  //     //   role: selectedRole,
+  //     //   adminSecret: selectedRole === "admin" ? adminSecret : undefined,
+  //     // };
+  //   } else if (mode === "forgot") {
+  //     endpoint = "/api/auth/reset-password";
+  //     payload = { email, newPassword: password };
+  //   }
+
+  //   try {
+  //     const res = await axios.post(`http://localhost:5000${endpoint}`, payload);
+
+  //     if (mode === "login") {
+  //       // 1. Role ko temporary save karo
+  //       const roleBeforeClear = localStorage.getItem("selectedRole");
+
+  //       // 2. Clear old garbage data
+  //       localStorage.clear();
+
+  //       // 3. Save New Login Data
+  //       localStorage.setItem("token", res.data.token);
+  //       localStorage.setItem("selectedRole", roleBeforeClear);
+
+  //       // 4. Fetch Fresh Profile to decide redirection
+  //       const profileRes = await axios.get("http://localhost:5000/api/auth/me", {
+  //         headers: { Authorization: `Bearer ${res.data.token}` },
+  //       });
+
+  //       const user = profileRes.data;
+  //       localStorage.setItem("user", JSON.stringify(user));
+
+  //       // 🔥 STEP-BY-STEP REDIRECT LOGIC
+  //       if (user.role === "student") {
+  //         // Consider profile complete only when university, specialization and phone are present
+  //         const hasDetails = user.university && user.university.trim() !== "" && user.specialization && user.specialization.trim() !== "" && user.phone && user.phone.trim() !== "";
+
+  //         if (hasDetails) {
+  //           navigate("/student"); // Dashboard
+  //         } else {
+  //           navigate("/student/profile"); // Profile Form
+  //         }
+  //       } else if (user.role === "admin") {
+  //         navigate("/admin");
+  //       } else {
+  //         navigate("/company");
+  //       }
+
+  //       // State refresh ke liye reload
+  //       window.location.reload();
+
+  //     } else if (mode === "register") {
+  //       setMessage("Registration successful! Please login.");
+  //       setMode("login");
+  //     } else {
+  //       setMessage("Password updated successfully! Please login.");
+  //       setMode("login");
+  //     }
+  //   } catch (err) {
+  //     let errorMessage = "Operation failed. Check details.";
+      
+  //     if (mode === "login") {
+  //       // For login, show "Invalid Credentials" for auth errors
+  //       if (err.response?.status === 401 || err.response?.data?.message?.toLowerCase().includes("password") || err.response?.data?.message?.toLowerCase().includes("email")) {
+  //         errorMessage = "Invalid Credentials - Email or Password incorrect";
+  //       } else {
+  //         errorMessage = err.response?.data?.message || "Login failed";
+  //       }
+  //     } else if (mode === "register") {
+  //       errorMessage = err.response?.data?.message || "Registration failed";
+  //     } else {
+  //       errorMessage = err.response?.data?.message || "Password reset failed";
+  //     }
+      
+  //     setError(errorMessage);
+  //   }
+  // };
+const handleAuth = async (e) => {
+  e.preventDefault();
+  setError("");
+  setMessage("");
+
+  if (mode === "forgot") {
+    // keep forgot password as is
     try {
-      const res = await axios.post(`http://localhost:5000${endpoint}`, payload);
-
-      if (mode === "login") {
-        // 1. Role ko temporary save karo
-        const roleBeforeClear = localStorage.getItem("selectedRole");
-
-        // 2. Clear old garbage data
-        localStorage.clear();
-
-        // 3. Save New Login Data
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("selectedRole", roleBeforeClear);
-
-        // 4. Fetch Fresh Profile to decide redirection
-        const profileRes = await axios.get("http://localhost:5000/api/auth/me", {
-          headers: { Authorization: `Bearer ${res.data.token}` },
-        });
-
-        const user = profileRes.data;
-        localStorage.setItem("user", JSON.stringify(user));
-
-        // 🔥 STEP-BY-STEP REDIRECT LOGIC
-        if (user.role === "student") {
-          // Consider profile complete only when university, specialization and phone are present
-          const hasDetails = user.university && user.university.trim() !== "" && user.specialization && user.specialization.trim() !== "" && user.phone && user.phone.trim() !== "";
-
-          if (hasDetails) {
-            navigate("/student"); // Dashboard
-          } else {
-            navigate("/student/profile"); // Profile Form
-          }
-        } else if (user.role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/company");
-        }
-
-        // State refresh ke liye reload
-        window.location.reload();
-
-      } else if (mode === "register") {
-        setMessage("Registration successful! Please login.");
-        setMode("login");
-      } else {
-        setMessage("Password updated successfully! Please login.");
-        setMode("login");
-      }
+      const res = await axios.post("http://localhost:5000/api/auth/reset-password", { email, newPassword: password });
+      setMessage("Password updated successfully! Please login.");
+      setMode("login");
     } catch (err) {
-      let errorMessage = "Operation failed. Check details.";
-      
-      if (mode === "login") {
-        // For login, show "Invalid Credentials" for auth errors
-        if (err.response?.status === 401 || err.response?.data?.message?.toLowerCase().includes("password") || err.response?.data?.message?.toLowerCase().includes("email")) {
-          errorMessage = "Invalid Credentials - Email or Password incorrect";
-        } else {
-          errorMessage = err.response?.data?.message || "Login failed";
-        }
-      } else if (mode === "register") {
-        errorMessage = err.response?.data?.message || "Registration failed";
-      } else {
-        errorMessage = err.response?.data?.message || "Password reset failed";
-      }
-      
-      setError(errorMessage);
+      setError(err.response?.data?.message || "Password reset failed");
     }
-  };
+    return;
+  }
+
+  if (mode === "register") {
+    navigate("/register");
+    return;
+  }
+
+  // ---- LOGIN ONLY BELOW ----
+  try {
+    console.log("STEP 1: Attempting login with", { email, password });
+
+    const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+
+    console.log("STEP 2: Login response:", res.data);
+
+    const token = res.data.token;
+    if (!token) {
+      setError("Login response has no token. Check backend.");
+      return;
+    }
+
+    const roleBeforeClear = localStorage.getItem("selectedRole");
+    console.log("STEP 3: selectedRole from localStorage:", roleBeforeClear);
+
+    localStorage.clear();
+    localStorage.setItem("token", token);
+    localStorage.setItem("selectedRole", roleBeforeClear);
+
+    console.log("STEP 4: Fetching profile...");
+
+    const profileRes = await axios.get("http://localhost:5000/api/auth/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log("STEP 5: Profile response:", profileRes.data);
+
+    const user = profileRes.data;
+    localStorage.setItem("user", JSON.stringify(user));
+
+    if (user.role === "student") {
+      const hasDetails = 
+  String(user.university || "").trim() !== "" && 
+  String(user.specialization || "").trim() !== "" && 
+  String(user.phone || "").trim() !== "";
+      navigate(hasDetails ? "/student" : "/student/profile");
+    } else if (user.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/company");
+    }
+
+    window.location.reload();
+
+  } catch (err) {
+    // 🔥 THIS IS KEY - log everything
+    console.error("ERROR OBJECT:", err);
+    console.error("ERROR RESPONSE:", err.response);
+    console.error("ERROR STATUS:", err.response?.status);
+    console.error("ERROR DATA:", err.response?.data);
+    console.error("ERROR MESSAGE:", err.response?.data?.message);
+
+    setError(`DEBUG: Status=${err.response?.status} | Message=${err.response?.data?.message || err.message}`);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 font-sans">
@@ -289,12 +224,12 @@ function Auth() {
         {message && <div className="bg-green-50 text-green-600 p-4 rounded-2xl mb-6 text-xs font-bold border-l-4 border-green-500">{message}</div>}
 
         <form onSubmit={handleAuth} className="space-y-5">
-          {mode === "register" && (
+          {/* {mode === "register" && (
             <div className="space-y-1">
               <label htmlFor="auth-name" className="text-[10px] font-black text-slate-400 uppercase ml-2">{nameLabel}</label>
               <input id="auth-name" name="name" className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-600 outline-none transition-all font-bold" type="text" placeholder={namePlaceholder} value={name} onChange={(e) => setName(e.target.value)} required />
             </div>
-          )}
+          )} */}
           
           <div className="space-y-1">
             <label htmlFor="auth-email" className="text-[10px] font-black text-slate-400 uppercase ml-2">Email Address</label>
@@ -332,7 +267,7 @@ function Auth() {
             </button>
           </div>
 
-          {mode === "register" && selectedRole === "admin" && (
+          {/* {mode === "register" && selectedRole === "admin" && (
             <div className="space-y-1 relative">
               <label htmlFor="admin-secret" className="text-[10px] font-black text-slate-400 uppercase ml-2">Admin Secret Key</label>
               <input id="admin-secret" name="adminSecret" className="w-full pr-12 p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-600 outline-none transition-all font-bold" type={showAdminSecret ? "text" : "password"} placeholder="Enter admin secret key" value={adminSecret} onChange={(e) => setAdminSecret(e.target.value)} required />
@@ -354,22 +289,25 @@ function Auth() {
                 )}
               </button>
             </div>
-          )}
+          )} */}
 
           {mode === "login" && (
-            <p className="text-right text-xs text-blue-600 cursor-pointer hover:underline font-black uppercase tracking-tighter" onClick={() => handleModeChange("forgot")}>
+            <p className="text-right text-xs text-blue-600 cursor-pointer hover:underline font-black uppercase tracking-tighter" onClick={() => navigate("/forget-password")}>
               Forgot Password?
             </p>
           )}
 
-          <button className="w-full bg-blue-700 text-white p-5 rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl active:scale-95">
+          {/* <button className="w-full bg-blue-700 text-white p-5 rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl active:scale-95">
             {mode === "login" ? "Login to Portal" : mode === "register" ? "Create Account" : "Update Password"}
-          </button>
+          </button> */}
+          <button className="w-full bg-blue-700 text-white p-5 rounded-[1.5rem]">
+  Login to Portal
+</button>
         </form>
 
         <p className="text-center mt-10 text-slate-400 text-[11px] font-bold uppercase tracking-wider">
           {mode === "login" ? (
-            <>New here? <span className="text-blue-600 cursor-pointer hover:underline" onClick={() => handleModeChange("register")}>Register Now</span></>
+            <>New here? <span className="text-blue-600 cursor-pointer hover:underline" onClick={() => navigate("/register")}>Register Now</span></>
           ) : (
             <span className="text-blue-600 cursor-pointer hover:underline" onClick={() => handleModeChange("login")}>Back to Login</span>
           )}
